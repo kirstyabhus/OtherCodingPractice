@@ -9,7 +9,15 @@ def get_names():
     app_ID = '6468363d'
 
     # the ingredient to search for
-    ingr = input("\nWhat ingredient do you want to search for? ")
+    #Error checks
+    while len(ingr) < 2:
+        print("Invalid. Please Try again.")
+        ingr = input("What ingredient do you want to search for? ")
+
+    while ingr.isdigit():
+        print("Invalid. Please Try again.")
+        ingr = input("What ingredient do you want to search for? ")
+
     recipe_names = []
 
     url = 'https://api.edamam.com/search?q={}&app_id={}&app_key={}'.format(ingr, app_ID, app_key)
