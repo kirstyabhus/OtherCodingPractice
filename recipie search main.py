@@ -8,6 +8,7 @@ def ingr_search():
     app_ID = '6468363d'
 
     # ask user for the ingredient to search for
+    global ingr
     ingr = input("What ingredient do you want to search for? ")
 
     # Error checks, to ensure that input is longer than 2 characters & only contains letters
@@ -15,7 +16,24 @@ def ingr_search():
         print("Invalid. Please Try again.")
         ingr = input("What ingredient do you want to search for? ")
 
-    url = 'https://api.edamam.com/search?q={}&app_id={}&app_key={}'.format(ingr, app_ID, app_key)
+    # the different meal types in the API
+    meal_types = ["breakfast", "lunch", "dinner", "snack", "teatime"]
+
+    # asks the user which meal type they would like to see
+    global meal_type_option
+    meal_type_option = input("What type of meal would you like to see recipes for? breakfast, lunch, dinner, snack, teatime or any? ").lower()
+
+    # a variable to track whether the user made a meal type option (0 = no choice made, 1 = a choice was made)
+    global type_chosen
+    type_chosen = False
+
+    # if the user has chosen a meal type from the list, search for recipes of their ingredient AND meal type.
+    if meal_type_option in meal_types:
+        url = 'https://api.edamam.com/search?q={}&app_id={}&app_key={}&mealType={}'.format(ingr, app_ID, app_key, meal_type_option.title())
+        type_chosen = True
+    else:
+        # otherwise, find recipes with the ingredient anf ANY meal type
+        url = 'https://api.edamam.com/search?q={}&app_id={}&app_key={}'.format(ingr, app_ID, app_key)
 
     result = requests.get(url)
 
@@ -28,10 +46,17 @@ def ingr_search():
 
 # function to print a numbered list of recipe names, based on the ingredient the user entered
 def recipe_list(recipes):
-    # find the number of "hits" aka the number of recipes found for the chosen ingredient
+
+    # find the number of "hits" aka the number of recipes found for the chosen ingredient/ ingredient + meal type
     length = len(recipes)
 
-    print("\nHere are some recipes...")
+    # if the user made an earlier choice on the TYPE of recipe they want to see, display the type in the heading
+    if type_chosen:
+        print(f"\nHere are some {meal_type_option} recipes...")
+    else:
+        # if the user did not choose a meal type, just display a heading without a meal type
+        print(f"\nHere are some recipes...")
+
     # run through all the recipes of the chosen ingredient
     for i in range(length):
         # store the name of the current recipe
@@ -63,7 +88,7 @@ def get_recipe(recipes):
     source = recipes[user_option]["recipe"]['source']
 
     # print the link for the preparation method
-    print(f"\nThe method for preparing {user_recipe} can be found at '{source}' with the link below:")
+    print(f"\nThe method for preparing {user_recipe} can be found at the '{source}' website with the link below:")
     print(recipes[user_option]["recipe"]["url"])
 
 
@@ -72,6 +97,7 @@ def run():
     # run the function to get the recipes for the users' input ingredient
     recipes = ingr_search()
 
+
     # run the function to print a numbered list of the users' input ingredients
     recipe_list(recipes)
 
@@ -79,4 +105,15 @@ def run():
     get_recipe(recipes)
 
 
+    option = input("\nWhat would you like to do next? \n1. Search for another ingredient \n3. Exit\n")
+
+    # if they want to search for another ingredient, run the run function again
+    if option == "1":
+        run()
+    else:
+        print("\nProgram End.")
+
+
+
+# make a text file for storing name + links for the recipes previously viewed AKA history
 run()
