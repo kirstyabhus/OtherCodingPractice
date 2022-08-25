@@ -9,7 +9,7 @@ def ingr_search():
 
     # ask user for the ingredient to search for
     global ingr
-    ingr = input("What ingredient do you want to search for? ")
+    ingr = input("\nWhat ingredient do you want to search for? ")
 
     # Error checks, to ensure that input is longer than 2 characters & only contains letters
     while len(ingr) <= 2 or not (ingr.isalpha()):
@@ -89,8 +89,14 @@ def get_recipe(recipes):
 
     # print the link for the preparation method
     print(f"\nThe method for preparing {user_recipe} can be found at the '{source}' website with the link below:")
-    print(recipes[user_option]["recipe"]["url"])
+    prep_url = recipes[user_option]["recipe"]["url"]
+    print(prep_url)
 
+
+    # Write the recipe name and its link to a text file. This stores the history of recently searched recipes.
+    f = open("history.txt", "a")
+    f.write(f"{user_recipe}\n{prep_url}\n\n")
+    f.close()
 
 # Function to run the whole code, putting all the functions together.
 def run():
@@ -105,7 +111,7 @@ def run():
     get_recipe(recipes)
 
 
-    option = input("\nWhat would you like to do next? \n1. Search for another ingredient \n3. Exit\n")
+    option = input("\nWhat would you like to do next? (1 or 2) \n1. Search for another ingredient \n2. Exit\n")
 
     # if they want to search for another ingredient, run the run function again
     if option == "1":
