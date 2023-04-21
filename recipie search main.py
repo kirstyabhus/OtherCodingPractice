@@ -21,7 +21,8 @@ def ingr_search():
 
     # asks the user which meal type they would like to see
     global meal_type_option
-    meal_type_option = input("What type of meal would you like to see recipes for? breakfast, lunch, dinner, snack, teatime or any? ").lower()
+    meal_type_option = input(
+        "What type of meal would you like to see recipes for? breakfast, lunch, dinner, snack, teatime or any? ").lower()
 
     # a variable to track whether the user made a meal type option (0 = no choice made, 1 = a choice was made)
     global type_chosen
@@ -29,7 +30,8 @@ def ingr_search():
 
     # if the user has chosen a meal type from the list, search for recipes of their ingredient AND meal type.
     if meal_type_option in meal_types:
-        url = 'https://api.edamam.com/search?q={}&app_id={}&app_key={}&mealType={}'.format(ingr, app_ID, app_key, meal_type_option.title())
+        url = 'https://api.edamam.com/search?q={}&app_id={}&app_key={}&mealType={}'.format(ingr, app_ID, app_key,
+                                                                                           meal_type_option.title())
         type_chosen = True
     else:
         # otherwise, find recipes with the ingredient anf ANY meal type
@@ -46,7 +48,6 @@ def ingr_search():
 
 # function to print a numbered list of recipe names, based on the ingredient the user entered
 def recipe_list(recipes):
-
     # find the number of "hits" aka the number of recipes found for the chosen ingredient/ ingredient + meal type
     length = len(recipes)
 
@@ -92,24 +93,22 @@ def get_recipe(recipes):
     prep_url = recipes[user_option]["recipe"]["url"]
     print(prep_url)
 
-
     # Write the recipe name and its link to a text file. This stores the history of recently searched recipes.
     f = open("history.txt", "a")
     f.write(f"{user_recipe}\n{prep_url}\n\n")
     f.close()
+
 
 # Function to run the whole code, putting all the functions together.
 def run():
     # run the function to get the recipes for the users' input ingredient
     recipes = ingr_search()
 
-
     # run the function to print a numbered list of the users' input ingredients
     recipe_list(recipes)
 
     # run the function to ask the user to choose a recipe, and to output the recipes' ingredient list
     get_recipe(recipes)
-
 
     option = input("\nWhat would you like to do next? (1 or 2) \n1. Search for another ingredient \n2. Exit\n")
 
@@ -120,6 +119,4 @@ def run():
         print("\nProgram End.")
 
 
-
-# make a text file for storing name + links for the recipes previously viewed AKA history
 run()
